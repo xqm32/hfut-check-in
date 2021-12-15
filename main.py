@@ -1,10 +1,10 @@
 import os
-from utils.hfuter.hfuter import hfuter
+from utils.hfuter.hfuter import HFUTer
 
 if __name__ == '__main__':
     env_dist = os.environ
 
-    stu = hfuter(username=env_dist['username'], password=env_dist['password'])
+    stu = HFUTer(username=env_dist['username'], password=env_dist['password'])
     if (stu.daily_checkin(env_dist['address'])):
         print("签到成功")
     else:

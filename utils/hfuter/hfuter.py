@@ -13,7 +13,7 @@ from Crypto.Cipher import AES
 from requests.sessions import session
 
 
-class hfuter:
+class HFUTer:
     def __init__(self, username, password) -> None:
         super().__init__()
 
@@ -324,7 +324,7 @@ if __name__ == "__main__":
     arg_parser.add_argument("address", type=str, help="签到地址")
     args = arg_parser.parse_args()
 
-    stu = hfuter(username=args.username, password=args.password)
+    stu = HFUTer(username=args.username, password=args.password)
     if stu.daily_checkin(args.address):
         print("签到成功")
     else:
