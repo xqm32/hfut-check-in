@@ -31,10 +31,10 @@ class hfuter:
 
         ret = self.__login()
         if ret:
-            print("{username}登录成功".format(username=self.username))
+            print("登录成功".format(username=self.username))
             self.logged_in = True
         else:
-            print("{username}登录失败！".format(username=self.username))
+            print("登录失败".format(username=self.username))
             self.logged_in = False
 
     def __login(self) -> bool:
@@ -115,7 +115,7 @@ class hfuter:
             return False
 
         if ret["data"]["mailRequired"] or ret["data"]["phoneRequired"]:
-            print("你需要先进行手机或者邮箱的认证，请在PC上打开cas.hfut.edu.cn页面进行登录之后才可使用此脚本")
+            print("你需要先进行手机或者邮箱的认证，请在 PC 上打开 cas.hfut.edu.cn 页面进行登录之后才可使用此脚本")
             return False
 
         # 然后post
@@ -136,7 +136,7 @@ class hfuter:
         )
         self.session.headers.pop("Content-Type")
 
-        if ret.text.find("cas协议登录成功跳转页面") != -1:
+        if ret.text.find("CAS 协议登录成功跳转页面") != -1:
             return True
         else:
             return False
@@ -273,9 +273,9 @@ class hfuter:
         end_time = datetime.datetime.strptime(end_time, "%Y-%m-%d %H:%M:%S %z")
         now_time = datetime.datetime.now(tz=pytz.timezone("Asia/Shanghai"))
 
-        print("打卡起始时间:", start_time)
-        print("打卡结束时间:", end_time)
-        print("　　现在时间:", now_time)
+        print("打卡起始时间:\t", start_time)
+        print("打卡结束时间:\t", end_time)
+        print("现在时间:\t", now_time)
         if start_time < now_time and now_time < end_time:
             print("在打卡时间内")
         else:
@@ -326,6 +326,6 @@ if __name__ == "__main__":
 
     stu = hfuter(username=args.username, password=args.password)
     if stu.daily_checkin(args.address):
-        print("签到成功~")
+        print("签到成功")
     else:
-        print("签到失败！")
+        print("签到失败")
