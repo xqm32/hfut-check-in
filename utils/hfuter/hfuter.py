@@ -136,7 +136,8 @@ class HFUTer:
         )
         self.session.headers.pop("Content-Type")
 
-        if ret.text.find("CAS 协议登录成功跳转页面") != -1:
+        # ? Why find this text?
+        if ret.text.find("cas协议登录成功跳转页面") != -1:
             return True
         else:
             return False
