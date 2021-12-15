@@ -31,10 +31,10 @@ class HFUTer:
 
         ret = self.__login()
         if ret:
-            print("登录成功".format(username=self.username))
+            print("登录成功")
             self.logged_in = True
         else:
-            print("登录失败".format(username=self.username))
+            print("登录失败")
             self.logged_in = False
 
     def __login(self) -> bool:
