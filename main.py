@@ -1,5 +1,5 @@
 import os
-from utils import hfuter
+from utils.hfuter.hfuter import hfuter
 
 if __name__ == '__main__':
     env_dist = os.environ
