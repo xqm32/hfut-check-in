@@ -1,22 +1,26 @@
 # hfut-check-in
 
-Auto check in via GitHub Actions
+[English](README.md) | [中文](README_zh.md)
 
-# Usage
+通过 GitHub Actions 的自动打卡程序
 
-1. Fork this repository
+# 使用方法
 
-2. To enable workflow, click `Actions` - `Workflows` - `Python application` - `Enable workflow`
+1. Fork 这个仓库
 
-3. To add your infomation, click `Settings` - `Secrets` - `New Secrets` and add the following secrets
+2. 启用工作流（workflow），请点击 `Actions` - `Workflows` - `Python application` - `Enable workflow`
 
-   `username` - Your student ID, 10 numbers in general
+3. 通过 GitHub Secrets 添加你的信息，请点击 `Settings` - `Secrets` - `New Secrets` 并添加如下信息
 
-   `password` - Your password for one.hfut.edu.cn
+   `username` - 你的学号，通常是 10 位数
 
-   `address` - Shushan, Hefei, Anhui in general
+   `password` - 你在 one.hfut.edu.cn 中的密码（即新版信息门户的密码）
 
-# Thanks
+   `address` - 通常应当填入「安徽省合肥市蜀山区」
+
+4. 检查程序的工作状态，请点击 `Actions` - `Workflows` - `All workflows` 并点击进入最后的程序运行结果，之后你便可以在 `build` - `Run code` 中看到程序的工作状态了
+
+# 鸣谢
 
 [@qdddz/HFUT_AutoSubmit](https://github.com/qdddz/HFUT_AutoSubmit)
 
