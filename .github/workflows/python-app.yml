@@ -32,4 +32,4 @@ jobs:
           password: ${{ secrets.password }}
           address: ${{ secrets.address }}
         run: |
-          python ./hfuter.py
+          python ./main.py
