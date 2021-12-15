@@ -19,4 +19,5 @@ Auto check in via GitHub Actions
 # Thanks
 
 [@qdddz/HFUT_AutoSubmit](https://github.com/qdddz/HFUT_AutoSubmit)
+
 [@HowardZorn/hfut_auto_check-in](https://github.com/HowardZorn/hfut_auto_check-in)
