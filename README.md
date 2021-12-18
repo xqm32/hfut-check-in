@@ -18,7 +18,9 @@ Auto check in via GitHub Actions
 
    `address` - Shushan, Hefei, Anhui in general
 
-4. To check the action's status, click `Actions` - `Workflows` - `All workflows` and enter the lastest workflow run. Then you can see the status in `build` - `Run code`
+To check the action's status, click `Actions` - `Workflows` - `All workflows` and enter the lastest workflow run. Then you can see the status in `build` - `Run code`
+
+To disable GitHub Actions' notifications(both email and web), click your avatar, then go to `Settings` - `Notifications` - `Actions` and uncheck `Email` and `Web`
 
 # Thanks
 

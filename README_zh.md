@@ -18,7 +18,9 @@
 
    `address` - 通常应当填入「安徽省合肥市蜀山区」
 
-4. 检查程序的工作状态，请点击 `Actions` - `Workflows` - `All workflows` 并点击进入最后的程序运行结果，之后你便可以在 `build` - `Run code` 中看到程序的工作状态了
+检查程序的工作状态，请点击 `Actions` - `Workflows` - `All workflows` 并点击进入最后的程序运行结果，之后你便可以在 `build` - `Run code` 中看到程序的工作状态了
+
+关闭 GitHub Actions 的提醒(邮件和网页)，请点击你的头像，之后点击 `Settings` - `Notifications` - `Actions` 并取消勾选 `Email` 和 `Web`
 
 # 鸣谢
 
