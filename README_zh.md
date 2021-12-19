@@ -22,6 +22,8 @@
 
 关闭 GitHub Actions 的提醒(邮件和网页)，请点击你的头像，之后点击 `Settings` - `Notifications` - `Actions` 并取消勾选 `Email` 和 `Web`
 
+**注意**：若此仓库至少 60 天未活动，请手动地启用该工作流
+
 # 鸣谢
 
 [@qdddz/HFUT_AutoSubmit](https://github.com/qdddz/HFUT_AutoSubmit)

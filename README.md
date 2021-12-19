@@ -22,6 +22,8 @@ To check the action's status, click `Actions` - `Workflows` - `All workflows` an
 
 To disable GitHub Actions' notifications(both email and web), click your avatar, then go to `Settings` - `Notifications` - `Actions` and uncheck `Email` and `Web`
 
+**ATTENTION**: You should enable the workflow manually if there hasn't been activity for at least 60 days
+
 # Thanks
 
 [@qdddz/HFUT_AutoSubmit](https://github.com/qdddz/HFUT_AutoSubmit)
