@@ -24,6 +24,11 @@
 
 **注意**：若此仓库至少 60 天未活动，请手动地启用该工作流
 
+# 待实现
+
+- [ ] 超时重试
+- [ ] 更规范的日志输出
+
 # 鸣谢
 
 [@qdddz/HFUT_AutoSubmit](https://github.com/qdddz/HFUT_AutoSubmit)

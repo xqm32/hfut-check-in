@@ -24,6 +24,11 @@ To disable GitHub Actions' notifications(both email and web), click your avatar,
 
 **ATTENTION**: You should enable the workflow manually if there hasn't been activity for at least 60 days
 
+# TODO
+
+- [ ] Retry if timeout
+- [ ] More formal log output
+
 # Thanks
 
 [@qdddz/HFUT_AutoSubmit](https://github.com/qdddz/HFUT_AutoSubmit)
