@@ -143,6 +143,7 @@ class HFUTer:
             return False
 
     def basic_infomation(self):
+        # TODO 将链接单独分离出变量
         if not self.logged_in:
             return {}
 
