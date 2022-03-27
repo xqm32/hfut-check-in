@@ -11,6 +11,10 @@ import base64
 import argparse
 from Crypto.Cipher import AES
 from requests.sessions import session
+# TODO Comment
+# from rich.console import Console
+# console = Console()
+# TODO End
 
 
 class HFUTer:
@@ -261,11 +265,13 @@ class HFUTer:
             return False
         self.session.headers.pop("Content-Type")
 
-        info = self.session.get(
+        # 这里应该为 post
+        info = self.session.post(
             "http://stu.hfut.edu.cn/xsfw/sys/swmxsyqxxsjapp/modules/mrbpa/getSetting.do",
             data={"data": "{}"},
         ).json()
 
+        # TODO Uncomment
         start_time = "%04d-%02d-%02d " % today + \
             info["data"]["DZ_TBKSSJ"] + " +0800"
         start_time = datetime.datetime.strptime(
@@ -283,6 +289,7 @@ class HFUTer:
         else:
             print("不在打卡时间内")
             return False
+        # TODO End
 
         self.session.headers.update(
             {"Content-Type": "application/x-www-form-urlencoded"}
@@ -294,6 +301,25 @@ class HFUTer:
         if last_form["code"] != "0":
             return False
 
+        # 需要再次 post getSetting
+        info = self.session.post(
+            "http://stu.hfut.edu.cn/xsfw/sys/swmxsyqxxsjapp/modules/mrbpa/getSetting.do",
+            data={"data": "{}"},
+        ).json()
+        # TODO Comment
+        # console.log(info)
+        # TODO End
+
+        # 获取 studentKey
+        studentKeyDo = self.session.post(
+            "http://stu.hfut.edu.cn/xsfw/sys/swmxsyqxxsjapp/modules/mrbpa/studentKey.do",
+            data={"data": "{}"},
+        ).json()
+        studentKey = studentKeyDo["data"]["studentKey"]
+        # TODO Comment
+        # console.log(studentKey)
+        # TODO End
+
         new_form = last_form["data"]
         new_form.update(
             {
@@ -304,13 +330,27 @@ class HFUTer:
                 "DZ_TBDZ": address,
                 "BY1": "1",
                 "TBSJ": "%.2d-%.2d-%.2d" % today,
+                "studentKey": studentKey,
             }
         )
 
-        ret = self.session.post(
-            "http://stu.hfut.edu.cn/xsfw/sys/swmxsyqxxsjapp/modules/mrbpa/saveStuXx.do",
+        # setCode 获取 paramStringKey
+        setCodeDo = self.session.post(
+            "http://stu.hfut.edu.cn/xsfw/sys/swmxsyqxxsjapp/modules/mrbpa/setCode.do",
             data={"data": json.dumps(new_form)},
         ).json()
+        paramStringKey = setCodeDo["data"]["paramStringKey"]
+        # TODO Comment
+        # console.log(paramStringKey)
+        # TODO End
+
+        ret = self.session.post(
+            "http://stu.hfut.edu.cn/xsfw/sys/swmxsyqxxsjapp/modules/mrbpa/saveStuXx.do",
+            data={"data": json.dumps({"paramStringKey": paramStringKey})},
+        ).json()
+        # TODO Comment
+        # console.log(ret)
+        # TODO End
 
         self.session.headers.pop("Content-Type")
         self.session.headers.pop("Referer")
