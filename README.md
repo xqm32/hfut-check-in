@@ -2,6 +2,8 @@
 
 [English](README.md) | [中文](README_zh.md)
 
+**This GitHub Actions now invaild, please do not use it temporarily!**
+
 Auto check in via GitHub Actions
 
 # Usage

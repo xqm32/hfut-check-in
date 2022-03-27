@@ -2,6 +2,8 @@
 
 [English](README.md) | [中文](README_zh.md)
 
+**此 GitHub Actions 已失效，请暂时不要使用！**
+
 通过 GitHub Actions 的自动打卡程序
 
 # 使用方法
