@@ -1,1 +1,1 @@
-from .HFUT import HFUTer
+from .HFUT import HFUTer, log

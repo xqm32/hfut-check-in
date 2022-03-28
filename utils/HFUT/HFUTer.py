@@ -2,19 +2,30 @@
 # This file should be redistributed by Apache-2.0 License
 # http://www.apache.org/licenses/LICENSE-2.0
 
-import requests
-import json
-import time
-import datetime
-import pytz
-import base64
 import argparse
+import base64
+import datetime
+import json
+import logging
+import time
+
+import pytz
+import requests
 from Crypto.Cipher import AES
-from requests.sessions import session
-# TODO Comment
-# from rich.console import Console
-# console = Console()
-# TODO End
+from rich.logging import RichHandler
+from rich.traceback import install
+
+install()
+
+FORMAT = "%(message)s"
+logging.basicConfig(
+    level="INFO",
+    format=FORMAT,
+    datefmt="[%X]",
+    handlers=[RichHandler(rich_tracebacks=True)]
+)
+
+log = logging.getLogger("rich")
 
 
 class HFUTer:
@@ -35,10 +46,10 @@ class HFUTer:
 
         ret = self.__login()
         if ret:
-            print("登录成功")
+            log.info("登录成功")
             self.logged_in = True
         else:
-            print("登录失败")
+            log.error("登录失败")
             self.logged_in = False
 
     def __login(self) -> bool:
@@ -97,10 +108,10 @@ class HFUTer:
 
         if ret.json():
             # needs OCR! will be done later.
-            print("需验证码，目前该功能此脚本未支持")
+            log.error("需验证码，目前该功能此脚本未支持")
             return False
         else:
-            print("无需验证码")
+            log.info("无需验证码")
 
         # 加密密码
         password = encrypt_password(self.password, key)
@@ -119,7 +130,7 @@ class HFUTer:
             return False
 
         if ret["data"]["mailRequired"] or ret["data"]["phoneRequired"]:
-            print("你需要先进行手机或者邮箱的认证，请在 PC 上打开 cas.hfut.edu.cn 页面进行登录之后才可使用此脚本")
+            log.error("你需要先进行手机或者邮箱的认证，请在 PC 上打开 cas.hfut.edu.cn 页面进行登录之后才可使用此脚本")
             return False
 
         # 然后post
@@ -189,14 +200,14 @@ class HFUTer:
             data={"data": json.dumps(config_data)},
         ).json()
         if ret["code"] != "0":
-            print(ret["msg"])
+            log.debug(ret["msg"])
             return {}
         ret = self.session.post(
             "http://stu.hfut.edu.cn/xsfw/sys/swpubapp/MobileCommon/getMenuInfo.do",
             data={"data": json.dumps(config_data)},
         ).json()
         if ret["code"] != "0":
-            print(ret["msg"])
+            log.debug(ret["msg"])
             return {}
         self.session.headers.pop("Content-Type")
 
@@ -254,14 +265,14 @@ class HFUTer:
             data={"data": json.dumps(config_data)},
         ).json()
         if ret["code"] != "0":
-            print(ret["msg"])
+            log.debug(ret["msg"])
             return False
         ret = self.session.post(
             "http://stu.hfut.edu.cn/xsfw/sys/swpubapp/MobileCommon/getMenuInfo.do",
             data={"data": json.dumps(config_data)},
         ).json()
         if ret["code"] != "0":
-            print(ret["msg"])
+            log.debug(ret["msg"])
             return False
         self.session.headers.pop("Content-Type")
 
@@ -271,7 +282,6 @@ class HFUTer:
             data={"data": "{}"},
         ).json()
 
-        # TODO Uncomment
         start_time = "%04d-%02d-%02d " % today + \
             info["data"]["DZ_TBKSSJ"] + " +0800"
         start_time = datetime.datetime.strptime(
@@ -281,15 +291,14 @@ class HFUTer:
         end_time = datetime.datetime.strptime(end_time, "%Y-%m-%d %H:%M:%S %z")
         now_time = datetime.datetime.now(tz=pytz.timezone("Asia/Shanghai"))
 
-        print("打卡起始时间:\t", start_time)
-        print("打卡结束时间:\t", end_time)
-        print("现在时间:\t", now_time)
-        if start_time < now_time and now_time < end_time:
-            print("在打卡时间内")
+        log.info(f"打卡起始时间:\t{start_time.strftime('%Y-%m-%d %H:%M:%S %z')}")
+        log.info(f"打卡结束时间:\t{end_time.strftime('%Y-%m-%d %H:%M:%S %z')}", )
+        log.info(f"当前打卡时间:\t{now_time.strftime('%Y-%m-%d %H:%M:%S %z')}", )
+        if start_time < now_time < end_time:
+            log.error("在打卡时间内")
         else:
-            print("不在打卡时间内")
+            log.error("不在打卡时间内")
             return False
-        # TODO End
 
         self.session.headers.update(
             {"Content-Type": "application/x-www-form-urlencoded"}
@@ -306,9 +315,7 @@ class HFUTer:
             "http://stu.hfut.edu.cn/xsfw/sys/swmxsyqxxsjapp/modules/mrbpa/getSetting.do",
             data={"data": "{}"},
         ).json()
-        # TODO Comment
-        # console.log(info)
-        # TODO End
+        log.debug(info)
 
         # 获取 studentKey
         studentKeyDo = self.session.post(
@@ -316,9 +323,7 @@ class HFUTer:
             data={"data": "{}"},
         ).json()
         studentKey = studentKeyDo["data"]["studentKey"]
-        # TODO Comment
-        # console.log(studentKey)
-        # TODO End
+        log.debug(studentKeyDo)
 
         new_form = last_form["data"]
         new_form.update(
@@ -340,17 +345,13 @@ class HFUTer:
             data={"data": json.dumps(new_form)},
         ).json()
         paramStringKey = setCodeDo["data"]["paramStringKey"]
-        # TODO Comment
-        # console.log(paramStringKey)
-        # TODO End
+        log.debug(setCodeDo)
 
         ret = self.session.post(
             "http://stu.hfut.edu.cn/xsfw/sys/swmxsyqxxsjapp/modules/mrbpa/saveStuXx.do",
             data={"data": json.dumps({"paramStringKey": paramStringKey})},
         ).json()
-        # TODO Comment
-        # console.log(ret)
-        # TODO End
+        log.debug(ret)
 
         self.session.headers.pop("Content-Type")
         self.session.headers.pop("Referer")
@@ -368,6 +369,6 @@ if __name__ == "__main__":
 
     stu = HFUTer(username=args.username, password=args.password)
     if stu.daily_checkin(args.address):
-        print("签到成功")
+        log.info("签到成功")
     else:
-        print("签到失败")
+        log.error("签到失败")
