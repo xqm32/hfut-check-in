@@ -54,7 +54,6 @@ class HFUTer:
             log.error("登录失败")
             self.logged_in = False
 
-    @retry(stop=stop_after_attempt(3), wait=wait_fixed(30))
     def __login(self) -> bool:
         def encrypt_password(text: str, key: str):
             """encrypt password"""
@@ -221,6 +220,7 @@ class HFUTer:
 
         return info["data"]
 
+    @retry(stop=stop_after_attempt(3), wait=wait_fixed(30))
     def daily_checkin(self, address: str) -> bool:
         if not self.logged_in:
             return False
