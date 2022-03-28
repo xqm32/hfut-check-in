@@ -14,6 +14,7 @@ import requests
 from Crypto.Cipher import AES
 from rich.logging import RichHandler
 from rich.traceback import install
+from tenacity import retry, stop_after_attempt, wait_fixed
 
 install()
 
@@ -29,6 +30,7 @@ log = logging.getLogger("rich")
 
 
 class HFUTer:
+    # TODO 链接解耦合
     def __init__(self, username, password) -> None:
         super().__init__()
 
@@ -46,12 +48,13 @@ class HFUTer:
 
         ret = self.__login()
         if ret:
-            log.info("登录成功")
+            log.info("登录失败")
             self.logged_in = True
         else:
             log.error("登录失败")
             self.logged_in = False
 
+    @retry(stop=stop_after_attempt(3), wait=wait_fixed(30))
     def __login(self) -> bool:
         def encrypt_password(text: str, key: str):
             """encrypt password"""
@@ -108,10 +111,10 @@ class HFUTer:
 
         if ret.json():
             # needs OCR! will be done later.
-            log.error("需验证码，目前该功能此脚本未支持")
+            log.error("此次登录需要验证码")
             return False
         else:
-            log.info("无需验证码")
+            log.info("此次登录无需验证码")
 
         # 加密密码
         password = encrypt_password(self.password, key)
@@ -133,7 +136,7 @@ class HFUTer:
             log.error("你需要先进行手机或者邮箱的认证，请在 PC 上打开 cas.hfut.edu.cn 页面进行登录之后才可使用此脚本")
             return False
 
-        # 然后post
+        # 登录
         self.session.headers.update(
             {"Content-Type": "application/x-www-form-urlencoded"}
         )
@@ -158,7 +161,6 @@ class HFUTer:
             return False
 
     def basic_infomation(self):
-        # TODO 将链接单独分离出变量
         if not self.logged_in:
             return {}
 
@@ -294,6 +296,7 @@ class HFUTer:
         log.info(f"打卡起始时间:\t{start_time.strftime('%Y-%m-%d %H:%M:%S %z')}")
         log.info(f"打卡结束时间:\t{end_time.strftime('%Y-%m-%d %H:%M:%S %z')}", )
         log.info(f"当前打卡时间:\t{now_time.strftime('%Y-%m-%d %H:%M:%S %z')}", )
+        # 是的，Python 支持这种用法！
         if start_time < now_time < end_time:
             log.error("在打卡时间内")
         else:
