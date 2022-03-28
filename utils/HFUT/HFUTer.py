@@ -48,7 +48,7 @@ class HFUTer:
 
         ret = self.__login()
         if ret:
-            log.info("登录失败")
+            log.info("登录成功")
             self.logged_in = True
         else:
             log.error("登录失败")
