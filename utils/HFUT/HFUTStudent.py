@@ -15,13 +15,34 @@ from .HFUTLog import log
 from .HFUTEncrypt import encryptPassword
 
 
+def willLogin(what):
+    def warpperA(func):
+        def warpperB(self, *args, **kwargs):
+            res = func(self, *args, **kwargs)
+            self.logged.add(what)
+            return res
+        return warpperB
+    return warpperA
+
+
+def loginRequired(what):
+    def warpperA(func):
+        def warpperB(self, *args, **kwargs):
+            if what in self.logged:
+                return func(self, *args, **kwargs)
+            else:
+                raise LoginError(f"尚未登录 {what}")
+        return warpperB
+    return warpperA
+
+
 class HFUTStudent:
     def __init__(self) -> None:
         super().__init__()
         self.session: requests.Session = None
-        self.loggedCAS = False
-        self.loggedOne = False
+        self.logged = set()
 
+    @willLogin('CAS')
     def loginCAS(self, username: str, password: str) -> requests.Session:
         self.session = requests.session()
         self.session.get('https://cas.hfut.edu.cn/cas/login')
@@ -56,9 +77,9 @@ class HFUTStudent:
             raise LoginError('密码错误')
         else:
             raise LoginError(f'未知错误，状态码为 {loginCAS.status_code}')
-        self.loggedCAS = True
         return self.session
 
+    @willLogin('One')
     def loginOne(self, username: str, password: str) -> requests.Session:
         self.loginCAS(username, password)
 
@@ -109,9 +130,10 @@ class HFUTStudent:
         )
         self.session.headers.update({'Authorization': f'Bearer {token}'})
         log.info('One 登录成功')
-        self.loggedOne = True
+        self.logged.add('One')
         return self.session
 
+    @loginRequired('CAS')
     def dailyCheckIn(self, address: str) -> None:
         self.session.get(
             'http://stu.hfut.edu.cn/xsfw/sys/emapfunauth/casValidate.do',
