@@ -1,1 +1,1 @@
-from .HFUTStudent import main
+from .HFUTStudent import *
