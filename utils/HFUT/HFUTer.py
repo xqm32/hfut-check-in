@@ -153,9 +153,12 @@ class HFUTer:
         )
         self.session.headers.pop("Content-Type")
 
-        # ? Why find this text?
-        if ret.text.find("cas协议登录成功跳转页面") != -1:
+        if ret.status_code == 200:
             return True
+        # 密码错误时是 401
+        elif ret.status_code == 401:
+            log.error("密码错误")
+            return False
         else:
             return False
 

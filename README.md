@@ -30,8 +30,9 @@ To disable GitHub Actions' notifications(both email and web), click your avatar,
 
 # TODO
 
-- [ ] Retry if timeout
-- [ ] More formal log output
+- [X] Prompt wrong password
+- [X] Retry if timeout
+- [X] More formal log output
 
 # Thanks
 

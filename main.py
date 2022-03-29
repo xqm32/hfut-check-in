@@ -1,11 +1,16 @@
 import argparse
 import os
 import sys
+import json
 
 from utils import HFUTer, log
 
 if __name__ == "__main__":
-    if len(sys.argv) == 1:
+
+    if os.path.exists('config.json'):
+        with open('config.json', encoding="UTF-8_SIG") as f:
+            env_dist = json.load(f)
+    elif len(sys.argv) == 1:
         env_dist = os.environ
     else:
         arg_parser = argparse.ArgumentParser()
