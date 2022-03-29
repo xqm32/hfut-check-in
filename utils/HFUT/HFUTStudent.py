@@ -1,18 +1,19 @@
 # The Author of this file is @HowardZorn on GitHub
+# The Maintainer of this file is @xqm32 on GitHub since 2021
 # This file should be redistributed by Apache-2.0 License
 # http://www.apache.org/licenses/LICENSE-2.0
 
 import argparse
 import json
 import os
-import sys
 import re
+import sys
 
 import requests
 
+from .HFUTEncrypt import encryptPassword
 from .HFUTException import *
 from .HFUTLog import log
-from .HFUTEncrypt import encryptPassword
 
 
 def willLogin(what):
