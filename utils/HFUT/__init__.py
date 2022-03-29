@@ -1,1 +1,1 @@
-from .HFUTer import HFUTer, log
+from .HFUTStudent import main
