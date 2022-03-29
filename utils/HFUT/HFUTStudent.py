@@ -5,29 +5,15 @@
 import argparse
 import base64
 import json
-import logging
 import os
 import sys
 
 import requests
-from Crypto.Util.Padding import pad
 from Crypto.Cipher import AES
-from rich.logging import RichHandler
-from rich.traceback import install
+from Crypto.Util.Padding import pad
 
 from .HFUTException import *
-
-install(max_frames=1)
-
-FORMAT = "%(message)s"
-logging.basicConfig(
-    level="INFO",
-    format=FORMAT,
-    datefmt="[%X]",
-    handlers=[RichHandler(rich_tracebacks=True)]
-)
-
-log = logging.getLogger("rich")
+from .HFUTLog import log
 
 
 class HFUTStudent:
@@ -120,6 +106,8 @@ class HFUTStudent:
             data={"data": "{}"},
         )
         studentKey = studentKeyDo.json()["data"]["studentKey"]
+        log.info("获取 studentKey 成功")
+        log.debug(f"studentKey: {repr(studentKey)}")
 
         newForm = getStuXxDo.json()["data"]
         newForm.update(
@@ -141,6 +129,8 @@ class HFUTStudent:
             data={"data": json.dumps(newForm)},
         )
         paramStringKey = setCodeDo.json()["data"]["paramStringKey"]
+        log.info("获取 paramStringKey 成功")
+        log.debug(f"paramStringKey: {repr(paramStringKey)}")
 
         saveStuXxDo = self.session.post(
             "http://stu.hfut.edu.cn/xsfw/sys/swmxsyqxxsjapp/modules/mrbpa/saveStuXx.do",
@@ -148,6 +138,7 @@ class HFUTStudent:
         )
         if saveStuXxDo.json()["code"] != "0":
             raise CheckInError(saveStuXxDo.json()["msg"])
+        log.info("打卡成功")
 
 
 def main():
