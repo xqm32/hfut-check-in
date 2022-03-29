@@ -7,7 +7,7 @@ install(max_frames=1)
 
 FORMAT = "%(message)s"
 logging.basicConfig(
-    level="DEBUG",
+    level="INFO",
     format=FORMAT,
     datefmt="[%X]",
     handlers=[RichHandler(rich_tracebacks=True)]

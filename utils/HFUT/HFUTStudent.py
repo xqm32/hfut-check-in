@@ -67,7 +67,6 @@ class HFUTStudent:
         else:
             raise LoginError(f"未知错误，状态码为 {loginCAS.status_code}")
 
-    # @retry(retry=retry_if_exception_type(ConnectionError), stop=stop_after_attempt(3), wait=wait_fixed(30))
     def dailyCheckIn(self, address: str) -> bool:
         self.session.get(
             "http://stu.hfut.edu.cn/xsfw/sys/emapfunauth/casValidate.do"
@@ -92,6 +91,17 @@ class HFUTStudent:
             data={"data": "{}"},
         )
         today = getSettingDo.json()["data"]["DQRQ"]
+        log.info(f"当前日期为 {today}")
+
+        # 判断今日是否有数据
+        judgeTodayHasDataDo = self.session.post(
+            "http://stu.hfut.edu.cn/xsfw/sys/swmxsyqxxsjapp/modules/mrbpa/judgeTodayHasData.do",
+            data={"data": json.dumps({"TBSJ": "2022-03-30"})},
+        )
+        if judgeTodayHasDataDo.json() != []:
+            log.info("今日已打卡")
+            return
+        log.info("今日尚未打卡")
 
         getStuXxDo = self.session.post(
             "http://stu.hfut.edu.cn/xsfw/sys/swmxsyqxxsjapp/modules/mrbpa/getStuXx.do",
@@ -99,6 +109,7 @@ class HFUTStudent:
         )
         if getStuXxDo.json()["code"] != "0":
             raise CheckInError(getStuXxDo.json()["msg"])
+        log.info(f"获取前一次打卡信息成功")
 
         # 获取 studentKey
         studentKeyDo = self.session.post(
@@ -144,9 +155,10 @@ class HFUTStudent:
 def main():
     if os.path.exists('config.json'):
         with open('config.json', encoding="UTF-8_SIG") as f:
-            cnofig = json.load(f)
+            config = json.load(f)
+        log.info(f"检测到 {config['username']} 的配置")
     elif len(sys.argv) == 1:
-        cnofig = os.environ
+        config = os.environ
     else:
         arg_parser = argparse.ArgumentParser()
         arg_parser.add_argument("username", type=str, help="Your student ID")
@@ -154,8 +166,8 @@ def main():
                                 help="Password for one.hfut.edu.cn")
         arg_parser.add_argument("address", type=str, help="Check in address")
         args = arg_parser.parse_args()
-        cnofig = vars(args)
+        config = vars(args)
 
     student = HFUTStudent()
-    student.login(cnofig["username"], cnofig["password"])
-    student.dailyCheckIn(cnofig['address'])
+    student.login(config["username"], config["password"])
+    student.dailyCheckIn(config['address'])

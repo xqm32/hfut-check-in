@@ -6,3 +6,8 @@ class LoginError(Exception):
 class CheckInError(Exception):
     def __init__(self, what):
         super().__init__(what)
+
+
+class ManualInterrupt(Exception):
+    def __init__(self, what):
+        super().__init__(what)
