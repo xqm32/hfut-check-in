@@ -9,6 +9,8 @@ Auto check in via GitHub Actions
 1. Fixed bug unable to check in
 
 2. Use previous check in address instead of `address` variable
+   
+   Since `address` variable removed, you should get detailed address by GPS at least once, or your `address` will be your current district
 
 # Usage
 

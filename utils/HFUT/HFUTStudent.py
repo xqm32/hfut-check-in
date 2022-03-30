@@ -214,6 +214,11 @@ class HFUTStudent:
                 'studentKey': studentKey
             }
         )
+        if 'DZ_TBDZ' not in information:
+            log.error('未查询到先前详细地址，将使用行政区替代')
+            information.update(
+                {'DZ_TBDZ': information['SZDQ_DISPLAY'].replace('/', '')}
+            )
         log.debug(information)
         log.debug(f'address: {information["DZ_TBDZ"]}')
 
