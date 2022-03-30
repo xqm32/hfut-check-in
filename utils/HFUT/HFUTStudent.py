@@ -165,9 +165,10 @@ class HFUTStudent:
         # 判断今日是否有数据
         judgeTodayHasDataDo = self.session.post(
             'http://stu.hfut.edu.cn/xsfw/sys/swmxsyqxxsjapp/modules/mrbpa/judgeTodayHasData.do',
-            data={'data': json.dumps({'TBSJ': '2022-03-30'})},
+            data={'data': json.dumps({'TBSJ': today})},
         )
-        if judgeTodayHasDataDo.json() != []:
+        log.debug(judgeTodayHasDataDo.json())
+        if judgeTodayHasDataDo.json()['data'] != []:
             log.info('今日已打卡')
             return
         log.info('今日尚未打卡')
