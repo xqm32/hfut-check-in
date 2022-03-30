@@ -10,6 +10,8 @@
 
 1. 修复了无法打卡的错误
 
+2. 使用先前地址作为打卡地址以代替 `address` 变量
+
 # 使用方法
 
 1. Fork 这个仓库
@@ -22,8 +24,6 @@
 
    `password` - 你在 one.hfut.edu.cn 中的密码（即新版信息门户的密码）
 
-   `address` - 通常应当填入「安徽省合肥市蜀山区」
-
 检查程序的工作状态，请点击 `Actions` - `Workflows` - `All workflows` 并点击进入最后的程序运行结果，之后你便可以在 `build` - `Run code` 中看到程序的工作状态了
 
 关闭 GitHub Actions 的提醒(邮件和网页)，请点击你的头像，之后点击 `Settings` - `Notifications` - `Actions` 并取消勾选 `Email` 和 `Web`
@@ -33,7 +33,7 @@
 # 待实现
 
 - [ ] 使用 WebVPN
-- [ ] 删除 `address` 变量
+- [X] 删除 `address` 变量
 - [X] 密码错误提示
 - [X] 超时重试
 - [X] 更规范的日志输出

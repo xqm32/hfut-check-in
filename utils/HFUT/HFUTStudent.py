@@ -135,7 +135,7 @@ class HFUTStudent:
         return self.session
 
     @loginRequired('CAS')
-    def dailyCheckIn(self, address: str) -> None:
+    def dailyCheckIn(self) -> None:
         self.session.get(
             'http://stu.hfut.edu.cn/xsfw/sys/emapfunauth/casValidate.do',
             timeout=60,
@@ -173,13 +173,23 @@ class HFUTStudent:
             return
         log.info('今日尚未打卡')
 
+        # 获取前一天的打卡信息（主要是获取 WID）
+        getStuSubData = self.session.post(
+            'http://stu.hfut.edu.cn/xsfw/sys/swmxsyqxxsjapp/modules/mrbpa/getStuTbData.do',
+            data={'data': json.dumps(
+                {"pageNumber": 1, "pageSize": 1, "KSRQ": "", "JSRQ": ""})}
+        )
+        WID = getStuSubData.json()['data'][0]['WID']
+        yesterday = getStuSubData.json()['data'][0]['TBSJ']
+        log.info(f'先前打卡日期为: {yesterday}')
+
         getStuXxDo = self.session.post(
             'http://stu.hfut.edu.cn/xsfw/sys/swmxsyqxxsjapp/modules/mrbpa/getStuXx.do',
-            data={'data': json.dumps({'TBSJ': today})},
+            data={'data': json.dumps({'WID': WID, 'TBSJ': yesterday})},
         )
         if getStuXxDo.json()['code'] != '0':
             raise CheckInError(getStuXxDo.json()['msg'])
-        log.info(f'获取前一次打卡信息成功')
+        log.info(f'获取先前打卡信息成功')
 
         # 获取 studentKey
         studentKeyDo = self.session.post(
@@ -190,24 +200,26 @@ class HFUTStudent:
         log.info('获取 studentKey 成功')
         log.debug(f'studentKey: {repr(studentKey)}')
 
-        newForm = getStuXxDo.json()['data']
-        newForm.update(
+        information = getStuXxDo.json()['data']
+        information.update(
             {
-                'DZ_SFSB': '1',
+                'TBSJ': today,
                 'GCKSRQ': '',
                 'GCJSRQ': '',
                 'DFHTJHBSJ': '',
-                'DZ_TBDZ': address,
+                'DZ_TBSJDZ': information['SZDQ_DISPLAY'],
+                'WID': WID,
                 'BY1': '1',
-                'TBSJ': today,
-                'studentKey': studentKey,
+                'studentKey': studentKey
             }
         )
+        log.debug(information)
+        log.debug(f'address: {information["DZ_TBDZ"]}')
 
         # setCode 获取 paramStringKey
         setCodeDo = self.session.post(
             'http://stu.hfut.edu.cn/xsfw/sys/swmxsyqxxsjapp/modules/mrbpa/setCode.do',
-            data={'data': json.dumps(newForm)},
+            data={'data': json.dumps(information)},
         )
         paramStringKey = setCodeDo.json()['data']['paramStringKey']
         log.info('获取 paramStringKey 成功')
@@ -234,10 +246,9 @@ def main():
         arg_parser.add_argument('username', type=str, help='Your student ID')
         arg_parser.add_argument('password', type=str,
                                 help='Password for one.hfut.edu.cn')
-        arg_parser.add_argument('address', type=str, help='Check in address')
         args = arg_parser.parse_args()
         config = vars(args)
 
     student = HFUTStudent()
     student.loginCAS(config['username'], config['password'])
-    student.dailyCheckIn(config['address'])
+    student.dailyCheckIn()

@@ -8,6 +8,8 @@ Auto check in via GitHub Actions
 
 1. Fixed bug unable to check in
 
+2. Use previous check in address instead of `address` variable
+
 # Usage
 
 1. Fork this repository
@@ -20,8 +22,6 @@ Auto check in via GitHub Actions
 
    `password` - Your password for one.hfut.edu.cn
 
-   `address` - Shushan, Hefei, Anhui in general
-
 To check the action's status, click `Actions` - `Workflows` - `All workflows` and enter the lastest workflow run. Then you can see the status in `build` - `Run code`
 
 To disable GitHub Actions' notifications(both email and web), click your avatar, then go to `Settings` - `Notifications` - `Actions` and uncheck `Email` and `Web`
@@ -31,7 +31,7 @@ To disable GitHub Actions' notifications(both email and web), click your avatar,
 # TODO
 
 - [ ] Use WebVPN
-- [ ] Remove `address` variable
+- [X] Remove `address` variable
 - [X] Prompt wrong password
 - [X] Retry if timeout
 - [X] More formal log output
