@@ -179,8 +179,9 @@ class HFUTStudent:
             data={'data': json.dumps(
                 {"pageNumber": 1, "pageSize": 1, "KSRQ": "", "JSRQ": ""})}
         )
-        WID = getStuSubData.json()['data'][0]['WID']
         yesterday = getStuSubData.json()['data'][0]['TBSJ']
+        studentID = getStuSubData.json()['data'][0]['XSBH']
+        WID = getStuSubData.json()['data'][0]['WID']
         log.info(f'先前打卡日期为: {yesterday}')
 
         getStuXxDo = self.session.post(
@@ -208,7 +209,7 @@ class HFUTStudent:
                 'GCJSRQ': '',
                 'DFHTJHBSJ': '',
                 'DZ_TBSJDZ': information['SZDQ_DISPLAY'],
-                'WID': WID,
+                'WID': f'{today}-{studentID}',
                 'BY1': '1',
                 'studentKey': studentKey
             }
