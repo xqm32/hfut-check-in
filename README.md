@@ -4,6 +4,8 @@
 
 Auto check in via GitHub Actions
 
+**ATTENTION**: Be sure to submit screenshots yourself in the Campus Today app starting May 6, or you will submit screenshots from the previous day.
+
 # Recent update
 
 1. Fixed bug unable to check in
